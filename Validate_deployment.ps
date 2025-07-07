@@ -1,0 +1,4 @@
+$myResourceGroup= 'finOps_costoptimization_resources'
+$akscluster= 'kubecost_demo_cluster'
+Import-AzAksCredential -ResourceGroupName $myResourceGroup -Name $akscluster
+kubectl get nodes
