@@ -26,6 +26,10 @@ param linuxAdminUsername string
 @description('Configure all linux machines with the SSH RSA public key string. Your key should include three parts, for example \'ssh-rsa AAAAB...snip...UcyupgH azureuser@linuxvm\'')
 param sshRSAPublicKey string
 
+@description('The name of the node resource group that will contain the cluster infrastructure resources.')
+param nodeResourceGroup string = '${clusterName}-node-rg'
+
+
 resource aks 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
   name: clusterName
   location: location
@@ -34,6 +38,8 @@ resource aks 'Microsoft.ContainerService/managedClusters@2024-02-01' = {
   }
   properties: {
     dnsPrefix: dnsPrefix
+    nodeResourceGroup: nodeResourceGroup
+
     agentPoolProfiles: [
       {
         name: 'agentpool'

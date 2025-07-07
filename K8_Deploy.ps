@@ -1,13 +1,16 @@
 az login
 #Connect to the azure subscription
 Connect-AzAccount
-#Create New resourcegroup
 $myResourceGroup= 'finOps_costoptimization_resources'
-New-AzResourceGroup -Name $myResourceGroup -Location eastus
-# Create AKS resources
+$location= 'eastus'
+$bicepdeployment= 'finops_deployment'
 $bicepfilepath= 'C:\Users\ksur.INT\Documents\GitHub\FinOPS_CostOptimization_Tools\main.bicep'
-$dnsname='finOpsCluster'
-$adminname='ensonoadmin'
+$dnsname= 'finOpsCluster'
+$adminname= 'ensonoadmin'
 $clusterName= 'kubecost_demo_cluster'
 $rsaPublicKey= "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCg8Yxv3ylNw4qzy972+xwLF4/QuSgaXQ6+cYMKqyYL44rA1ZSk6ko+TiQG9BZSD6PTHTQMHlWN3RZzXepfEBnvdpiqq37G77q+wER/r/N5u5VIVfX054D1dlqGoEMhoRUHqo+cGz9ttL3DH9AegjmzAtVMIZtTalV90awbmUJeDeD5OF9c64/wcmvo2WofJGSPaqOm/+GxbmNTYdLfsU/8+30/jEl8A3pKRjghGE/wOPE4kXVlvjfi6B2IKOJlgXPtcxTgBlNrg8YWV3yDboP8esJvVx4/wENUalXySM3/08YoPh8p1UiuE8n1PLD3+6lqLAsMwwO/B8eSqyl3KRybRyIYJ/2HyfkVZtEt0MqJs6GIOfH1ZjaLCOZknR5TjIrx2aftfRLcBTbz6d7m/KbMRwQ07dl+HeYvrHDPskMIFf+WW7r3s3HcTxjl7RRVxlSY8L5D1ouvT+mFvB+bnpZzELmmnQzpMIifFYUOw7V4WWcXFywao1jXAY+yAaHE/j5CrKtORhRy6ZwY7GijXygNwdVPQAlZ18q0ys69GZqSty31R7J2A4A7nUaMjhI3C/x6tYPEkj19rOmayxwU2oG1Kg9x0fUoGfMSdojs8sRkQrODF7WyYrZkhNhbGBmzBucIp9T5oX2W7i/fejDXSQ42GpHGTr5xSHtkk8+6vkZAZw== int\ksur@ENS-FSPDZ64"
-New-AzResourceGroupDeployment -ResourceGroupName $myResourceGroup -clusterName $clustername -TemplateFile $bicepfilepath -dnsPrefix $dnsname -linuxAdminUsername $adminname -sshRSAPublicKey $rsaPublicKey
+
+#Create New resourcegroup
+New-AzResourceGroup -Name $myResourceGroup -Location $location
+# Create AKS resources
+New-AzResourceGroupDeployment -Name $bicepdeployment -ResourceGroupName  $myResourceGroup -clusterName $clustername -TemplateFile $bicepfilepath -dnsPrefix $dnsname -linuxAdminUsername $adminname -sshRSAPublicKey $rsaPublicKey -Tag @{"deployment"="demo"; "created_by"="bicep";}
